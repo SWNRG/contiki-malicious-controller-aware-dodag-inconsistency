@@ -1,0 +1,57 @@
+Changes in this contiki:
+
+project.conf
+/* inside rpl-mrhof.c you can enable printing details (rank) of chosen parent 
+ * Good for monitoring malicious node "destructive force".
+ * Remember, RPL can detect loops and avoid them, so eventually there will be
+ * one at least connection tot he sink, even if the malicious advertises low rank
+ */
+#define PRINT_CHOOSING_PARENT_DETAILS 0
+
+/* Enable STATISTICS: it will give you UDP and ICMP per node */
+#define UIP_CONF_STATISTICS 1  
+
+rpl-icmp6.c
+Declarations
+/* George they will be sent to app layer for extra info to the sink*/ 
+static  rpl_parent_t *dao_preffered_parent;
+static  uip_ipaddr_t *dao_preffered_parent_ip;
+static  uip_ipaddr_t dao_prefix_own_ip;
+
+l504 PRINTF->printf("RPL: LEAF ONLY DIO rank set to INFINITE_RANK\n");
+
+l1135: You can use those variables on application layer 
+(contiki/examples/ipv6/rpl-udp-controller-data/udp-client.c)
+
+/* George they will be external to app layer for extra info to the sink*/ 
+dao_preffered_parent = parent;
+dao_preffered_parent_ip = rpl_get_parent_ipaddr(dao_preffered_parent->dag->preferred_parent);
+dao_prefix_own_ip = prefix; //node's current own IP address
+
+rpl-mrhof.c
+l228: Kept the same logic of returing the best parent, just printing details
+about the two parents been currently compared. You can monitor the behavior
+of mobile ndoes
+
+/* George : printing all avaliable parents. 
+ * Good for monitoring malicious nodes succesful behavior 
+ */
+	if (p1_cost < p2_cost){
+#ifdef PRINT_CHOOSING_PARENT_DETAILS 
+		printf("MRHOF activ.p %u--%5u",rpl_get_parent_ipaddr(p1)->u8[15],p1_cost);
+		printf(". Alt p: %u--%5u",rpl_get_parent_ipaddr(p2)->u8[15],p2_cost);
+		printf(", my rank %u\n",dag->rank);
+#endif /* PRINT_CHOOSING_PARENT_DETAILS */			
+		return p1;
+	}
+	else{// they cannot be equal, since it would never come here...
+#ifdef PRINT_CHOOSING_PARENT_DETAILS		
+		printf("MRHOF-2 activ.p %u--%5u",rpl_get_parent_ipaddr(p2)->u8[15],p2_cost);
+		printf(". Alt p: %u--%5u",rpl_get_parent_ipaddr(p1)->u8[15],p1_cost);
+		printf(", my rank %u\n",dag->rank);
+#endif /* PRINT_CHOOSING_PARENT_DETAILS */			
+		return p2;	
+	}
+		
+	/* Original return */	
+  //return p1_cost < p2_cost ? p1 : p2;

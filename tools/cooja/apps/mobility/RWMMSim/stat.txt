@@ -1,0 +1,50 @@
+# Position data for simulation of WSN nodes
+# Automatically generated
+# Version: 0.10, 2012-may-02
+# Author: Marcus Lundén, SICS
+# email: marcus.lunden@gmail.com
+#
+# Model used: Random Waypoint model
+# Number of nodes: 1
+# Time [s]: 18000.0 seconds
+# Min speed [m/s]: 0.1
+# Max speed [m/s]: 2.0
+# Min pause time [s]: 2.0
+# Max pause time [s]: 10.0
+# Currently disregarding the first 4.0 seconds
+# Resolution [s]: 0.2
+# Maximum X-size [m]: 400.0
+# Maximum Y-size [m]: 400.0
+#
+#==========================================
+
+
+ Connectivity matrix at simulation start.
+Node with lowest index is in the top left corner.
+Legend: 2 means IN range, 1 means Interference range, 0 means out of range.
+Eg. [1][3]==2 means that nodes 1 and 3 are in range of eachother.
+
+#NONODES: 1
+
+#CONNSTART
+[[0]]
+#CONNEND
+
+
+#STATSTART
+#STATEND
+
+ Connectivity matrix at simulation end.
+[[0]]
+
+  
+
+Node		 Avg speed [m/s]	 Max speed[m/s]		 Travel[m]
+====================================================================
+	1		 0.72				 1.97 				 13001.67 
+
+
+Maximum travel by node: 1
+Distance: 13001.67 [m]. AvgSpeed: 0.72 [m/s].
+Minimum travel by node: 1
+Distance: 13001.67 [m]. AvgSpeed: 0.72 [m/s].
