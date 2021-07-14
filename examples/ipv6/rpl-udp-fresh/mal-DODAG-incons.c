@@ -235,7 +235,13 @@ monitor_DAO(void)
  */
 	uip_ipaddr_t *addr;
 	
-#define PRINT_CHANGES 0
+/* DODAG Inconsistency targets ONLY the parent of the attacker,
+ * by sending erroneous message to force the parent only to reset
+ * its trickle timer.
+ * Hence, we need to know the parent of the attacker to trace the
+ * results of the attack (battery exhaustion?)
+ */
+#define PRINT_CHANGES 1
 
 	/* In contiki, you can directly compare if(parent == parent2) */
 	if(my_cur_parent != dao_preffered_parent){
@@ -244,6 +250,9 @@ monitor_DAO(void)
 		printLongAddr(my_cur_parent_ip);
 		printf(", new->");
 		printLongAddr(dao_preffered_parent_ip);
+		printf("\n");
+		printf("My parent in short: ");
+		printShortAddr(dao_preffered_parent_ip);
 		printf("\n");
 #endif
 		my_cur_parent = dao_preffered_parent;
@@ -339,10 +348,14 @@ PROCESS_THREAD(udp_client_process, ev, data)
 		PROCESS_YIELD();
 
 /* participating to slim-mode as a ''normal-legitimate'' node */
+/* Morever, the DODAG inconsistency attacker will print its parent,
+ * which it attacks, in order to examine the parent for the attack
+ * effects (battery?)
+ */
 		monitor_DAO();
 
 /* 
- * George IMPLEMENTING DODAG incocnistensy attack
+ * George IMPLEMENTING DODAG incocnistensy attack does NOTHING here.
  * look in rpl-ext-header.c for the attack implementation 
  * (altering flags 'R', 'O')
  */
@@ -379,7 +392,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 			}
 
 			if (counter == 5000){ 
-			/* start malicious behavior not needed to test version number */
+			/* start malicious behavior not needed */
 				 //intercept_on = 0; // NOT USED IN DODAG INCONSISTENCY
                 		
 			} 
